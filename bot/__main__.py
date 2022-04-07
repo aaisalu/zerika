@@ -22,6 +22,13 @@ from .helper.telegram_helper.button_build import ButtonMaker
 from .modules import authorize, list, cancel_mirror, mirror_status, mirror, clone, watch, shell, eval, delete, speedtest, count, leech_settings, search, rss
 
 
+# Testing
+import psutil
+import platform
+from datetime import datetime
+from platform import python_version, uname
+
+
 def stats(update, context):
     currentTime = get_readable_time(time() - botStartTime)
     total, used, free, disk= disk_usage('/')
