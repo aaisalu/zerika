@@ -493,7 +493,7 @@ To Clone or Leech gdtot link follow these steps:
 
 ## Credits
 
-Bot is based upon original repo [Anas] (https://github.com/anasty17/mirror-leech-telegram-bot) and [python-aria-mirror-bot](https://github.com/lzzy12/python-aria-mirror-bot)
+Bot is based upon original repo [Anas](https://github.com/anasty17/mirror-leech-telegram-bot) and [python-aria-mirror-bot](https://github.com/lzzy12/python-aria-mirror-bot)
 
 Some of features are taken from [PaulSonOfLars](https://github.com/PaulSonOfLars) , [AnimeKaizoku](https://github.com/AnimeKaizoku) and  [Astrako](https://github.com/Astrako/AstrakoBot)
 
