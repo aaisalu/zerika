@@ -31,3 +31,7 @@ tenacity
 tgCrypto
 urllib3
 yt-dlp
+covid
+CurrencyConverter
+pytz
+gtts
