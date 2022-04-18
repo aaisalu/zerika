@@ -12,6 +12,10 @@ from bot.helper.telegram_helper.bot_commands import BotCommands
 from bot import download_dict, download_dict_lock, STATUS_LIMIT, botStartTime
 from bot.helper.telegram_helper.button_build import ButtonMaker
 
+from telegram import Message
+from bot import AUTHORIZED_CHATS, SUDO_USERS
+from os import remove as osremove, path as ospath, environ
+
 MAGNET_REGEX = r"magnet:\?xt=urn:btih:[a-zA-Z0-9]*"
 
 URL_REGEX = r"(?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+"
@@ -63,7 +67,7 @@ def get_readable_file_size(size_in_bytes) -> str:
     try:
         return f'{round(size_in_bytes, 2)}{SIZE_UNITS[index]}'
     except IndexError:
-        return 'File too large'
+        return '‼️ File too large'
 
 def getDownloadByGid(gid):
     with download_dict_lock:
@@ -106,10 +110,63 @@ def get_progress_bar_string(status):
     p = 0 if total == 0 else round(completed * 100 / total)
     p = min(max(p, 0), 100)
     cFull = p // 8
-    p_str = '■' * cFull
-    p_str += '□' * (12 - cFull)
-    p_str = f"[{p_str}]"
+    p_str = '⬤' * cFull
+    p_str += '○' * (12 - cFull)
+    p_str = f"「{p_str}」"
     return p_str
+
+# def check_idgroup(msg):
+#     return bool(id in AUTHORIZED_CHATS or id in SUDO_USERS or id == OWNER_ID)
+#     idk = msg.from_user.id
+#     say=list(AUTHORIZED_CHATS)
+#     for k in str(say).splitlines():
+#         for b in str(idk).splitlines():
+#             call=(b.replace('[','').replace(']','').split())
+#             for j in call:
+#                 j
+#         sop=(k.replace('[','').replace(']','').replace(' ','').replace('-','').split(','))
+#         for am in sop:
+#             if j in am:
+#                 loprex=f"hello my love {am}" 
+#         return loprex
+
+
+# def check_idgroup(message):
+#     id = message.from_user.id
+#     return bool(id in AUTHORIZED_CHATS or id in SUDO_USERS or id == OWNER_ID)
+
+
+def check_idgroup(msg):
+    id = msg.from_user.id
+    return bool(id in AUTHORIZED_CHATS)
+
+    
+def if_oneid(haha,baba,chaha):
+    if len(haha)<=1:      
+        for line in haha:
+            one_id=f'<a href="https://t.me/c/{str(line)[4:]}/{baba}">{chaha}</a>'
+            return one_id
+    else:
+        return ('two',len(haha))
+
+def juneli(message):
+    group_username='zeroncell'
+    chat_unqid='-1001570004675'
+    user_unqname=message.from_user.first_name
+    user_unqusername=message.chat.username
+    user_unqid=message.from_user.id
+    message_unqid = message.reply_to_message.message_id if message.reply_to_message else message.message_id    
+    if message.chat.type in ['supergroup','group']:
+        if len(AUTHORIZED_CHATS)<=1:      
+                # identity = f'<a href="https://t.me/{group_username}/{message_unqid}">{user_unqname}</a>'
+                # identity = f'<a href="https://t.me/c/{str(chat_unqid)[4:]}/{message_unqid}">{user_unqname}</a>'
+                for line in AUTHORIZED_CHATS:
+                    identity=f'<a href="https://t.me/c/{str(line)[4:]}/{message_unqid}">a.{user_unqname}</a>🗿 <code>{user_unqid}</code>'
+        else:
+            identity=f'<a href="tg://user?id={user_unqid}">b.{user_unqname}</a>🗿 <code>{user_unqid}</code>'
+    else:
+        identity=f'<a href="tg://user?id={user_unqid}">c.{user_unqname}</a>🗿 <code>{user_unqid}</code>'
+    return identity
 
 def get_readable_message():
     with download_dict_lock:
@@ -122,46 +179,49 @@ def get_readable_message():
             global pages
             pages = ceil(tasks/STATUS_LIMIT)
             if PAGE_NO > pages and pages != 0:
-                globals()['COUNT'] -= STATUS_LIMIT
-                globals()['PAGE_NO'] -= 1
+                globals()['🎰COUNT'] -= STATUS_LIMIT
+                globals()['📋PAGE_NO'] -= 1
             START = COUNT
+
         for index, download in enumerate(list(download_dict.values())[START:], start=1):
-            msg += f"<b>Name:</b> <code>{escape(str(download.name()))}</code>"
-            msg += f"\n<b>Status:</b> <i>{download.status()}</i>"
+            msg += f"<b>🔰 Name:</b> <code>{escape(str(download.name()))}</code>"
+            msg += f"\n<b>🎃 Status:</b> <i>{download.status()}</i>"
+            msg += f'\n<b>🥷 User :</b> {juneli(download.message)}'
+            # msg += f'\n<b>💀 Check :</b> {check_idgroup(download.message)}  '#{juneli(download.message)}
             if download.status() not in [
                 MirrorStatus.STATUS_ARCHIVING,
                 MirrorStatus.STATUS_EXTRACTING,
                 MirrorStatus.STATUS_SPLITTING,
                 MirrorStatus.STATUS_SEEDING,
             ]:
-                msg += f"\n{get_progress_bar_string(download)} {download.progress()}"
+                msg += f"\n{get_progress_bar_string(download)} <b>{download.progress()}</b>"
                 if download.status() == MirrorStatus.STATUS_CLONING:
-                    msg += f"\n<b>Cloned:</b> {get_readable_file_size(download.processed_bytes())} of {download.size()}"
+                    msg += f"\n<b>🗜 Cloned:</b> {get_readable_file_size(download.processed_bytes())} of {download.size()}"
                 elif download.status() == MirrorStatus.STATUS_UPLOADING:
-                    msg += f"\n<b>Uploaded:</b> {get_readable_file_size(download.processed_bytes())} of {download.size()}"
+                    msg += f"\n<b>🌈 Uploaded:</b> {get_readable_file_size(download.processed_bytes())} of {download.size()}"
                 else:
-                    msg += f"\n<b>Downloaded:</b> {get_readable_file_size(download.processed_bytes())} of {download.size()}"
-                msg += f"\n<b>Speed:</b> {download.speed()} | <b>ETA:</b> {download.eta()}"
+                    msg += f"\n<b>🌈 Downloaded:</b> {get_readable_file_size(download.processed_bytes())} of {download.size()}"
+                msg += f"\n<b>⚡ Speed:</b> {download.speed()} | <b>⏰ETA:</b> {download.eta()}"
                 try:
-                    msg += f"\n<b>Seeders:</b> {download.aria_download().num_seeders}" \
-                           f" | <b>Peers:</b> {download.aria_download().connections}"
+                    msg += f"\n<b>☘ Seeders:</b> {download.aria_download().num_seeders}" \
+                           f" | <b>📡 Peers:</b> {download.aria_download().connections}"
                 except:
                     pass
                 try:
-                    msg += f"\n<b>Seeders:</b> {download.torrent_info().num_seeds}" \
-                           f" | <b>Leechers:</b> {download.torrent_info().num_leechs}"
+                    msg += f"\n<b>🍀 Seeders:</b> {download.torrent_info().num_seeds}" \
+                           f" | <b>❄ Leechers:</b> {download.torrent_info().num_leechs}"
                 except:
                     pass
-                msg += f"\n<code>/{BotCommands.CancelMirror} {download.gid()}</code>"
+                msg += f"\n<b>☠️ Cancel:</b> <code>/{BotCommands.CancelMirror} {download.gid()}</code>"
             elif download.status() == MirrorStatus.STATUS_SEEDING:
-                msg += f"\n<b>Size: </b>{download.size()}"
-                msg += f"\n<b>Speed: </b>{get_readable_file_size(download.torrent_info().upspeed)}/s"
-                msg += f" | <b>Uploaded: </b>{get_readable_file_size(download.torrent_info().uploaded)}"
-                msg += f"\n<b>Ratio: </b>{round(download.torrent_info().ratio, 3)}"
-                msg += f" | <b>Time: </b>{get_readable_time(download.torrent_info().seeding_time)}"
-                msg += f"\n<code>/{BotCommands.CancelMirror} {download.gid()}</code>"
+                msg += f"\n<b>🗃 Size: </b>{download.size()}"
+                msg += f"\n<b>⚡ Speed: </b>{get_readable_file_size(download.torrent_info().upspeed)}/s"
+                msg += f" | <b>🌡 Uploaded: </b>{get_readable_file_size(download.torrent_info().uploaded)}"
+                msg += f"\n<b>⏳ Ratio: </b>{round(download.torrent_info().ratio, 3)}"
+                msg += f" | <b>⏰ Time: </b>{get_readable_time(download.torrent_info().seeding_time)}"
+                msg += f"\n<b>☠️ Cancel:</b> <code>/{BotCommands.CancelMirror} {download.gid()}</code>"
             else:
-                msg += f"\n<b>Size: </b>{download.size()}"
+                msg += f"\n<b>📜 Size: </b>{download.size()}"
             msg += "\n\n"
             if STATUS_LIMIT is not None and index == STATUS_LIMIT:
                 break
@@ -184,12 +244,12 @@ def get_readable_message():
         dlspeed = get_readable_file_size(dlspeed_bytes)
         ulspeed = get_readable_file_size(uldl_bytes)
         bmsg += f"\n<b>RAM:</b> {virtual_memory().percent}% | <b>UPTIME:</b> {currentTime}"
-        bmsg += f"\n<b>DL:</b> {dlspeed}/s | <b>UL:</b> {ulspeed}/s"
+        bmsg += f"\n<b>DL:</b> {dlspeed}/s 🔻 |  <b>UL:</b> {ulspeed}/s 🔺"
         if STATUS_LIMIT is not None and tasks > STATUS_LIMIT:
             msg += f"<b>Page:</b> {PAGE_NO}/{pages} | <b>Tasks:</b> {tasks}\n"
             buttons = ButtonMaker()
-            buttons.sbutton("Previous", "status pre")
-            buttons.sbutton("Next", "status nex")
+            buttons.sbutton("◀️ Previous", "status pre")
+            buttons.sbutton("Next ▶️", "status nex")
             button = InlineKeyboardMarkup(buttons.build_menu(2))
             return msg + bmsg, button
         return msg + bmsg, ""
