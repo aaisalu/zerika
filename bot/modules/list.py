@@ -44,7 +44,7 @@ def select_type(update, context):
         query.answer()
         list_method = data[3]
         item_type = data[2]
-        editMessage(f"<b>Searching for <i>{key}</i></b>", msg)
+        editMessage(f"<b>🔍Searching for <i>{key}</i></b>", msg)
         Thread(target=_list_drive, args=(key, msg, list_method, item_type)).start()
     else:
         query.answer()
@@ -58,7 +58,7 @@ def _list_drive(key, bmsg, list_method, item_type):
     if button:
         editMessage(msg, bmsg, button)
     else:
-        editMessage(f'No result found for <i>{key}</i>', bmsg)
+        editMessage(f'‼️ No result found for <i>{key}</i>', bmsg)
 
 list_handler = CommandHandler(BotCommands.ListCommand, list_buttons, filters=CustomFilters.authorized_chat | CustomFilters.authorized_user, run_async=True)
 list_type_handler = CallbackQueryHandler(select_type, pattern="types", run_async=True)
