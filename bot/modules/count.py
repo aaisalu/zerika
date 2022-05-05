@@ -34,11 +34,11 @@ def countNode(update, context):
         except DirectDownloadLinkException as e:
             return sendMessage(str(e), context.bot, update)
     if is_gdrive_link(link):
-        msg = sendMessage(f"Counting: <code>{link}</code>", context.bot, update)
+        msg = sendMessage(f"📝Counting: <code>{link}</code>", context.bot, update)
         gd = GoogleDriveHelper()
         result = gd.count(link)
         deleteMessage(context.bot, msg)
-        cc = f'\n\n<b>cc: </b>{tag}'
+        cc = f'\n\n<b>🐹cc: </b>{tag}'
         sendMessage(result + cc, context.bot, update)
         if gdtot_link:
             gd.deletefile(link)
