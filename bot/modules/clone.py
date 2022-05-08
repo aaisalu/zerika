@@ -81,7 +81,7 @@ def cloneNode(update, context):
             except IndexError:
                 pass
         cc = f'\n\n<b>🐹cc: </b>{tag}'
-        if button in ["cancelled", ""]:
+        if button in ["Cancelled", ""]:
             sendMessage(f"{tag} {result}", context.bot, update)
         else:
             sendMarkup(result + cc, context.bot, update, button)
