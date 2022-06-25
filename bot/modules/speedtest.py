@@ -65,9 +65,6 @@ def speedtestxyz_callback(update, context):
 <b>Ping:</b> <code>{result['ping']} ms</code>
 <b>ISP Rating:</b> <code>{result['client']['isprating']}</code>
 '''
-        # string_speed += f"\nDownload: `{convert(result['download'])}Mb/s`\nUpload: `{convert(result['upload'])}Mb/s`\nPing: `{result['ping']}`"
-        # update.effective_message.edit_text(string_speed)
-
         editMessage(string_speed, msg)
 
 
