@@ -20,7 +20,7 @@ def convert(update, context):
             orig_cur_amount = float(args[1])
 
         except ValueError:
-            update.effective_message.reply_text(f"Invalid  currency {look}")
+            update.effective_message.reply_text(f"Invalid amount of currency {look}")
             return
 
         orig_cur = args[2].upper()
@@ -37,10 +37,10 @@ def convert(update, context):
         response = requests.get(request_url).json()
         try:
             current_rate = float(
-                response["Exchange Rate"]["5. Exchange Rate"]
+                response["Realtime Currency Exchange Rate"]["5. Exchange Rate"]
             )
         except KeyError:
-            update.effective_message.reply_text(f"not supported.  {look}")
+            update.effective_message.reply_text(f"Currency not supported.  {look}")
             return
         new_cur_amount = round(orig_cur_amount * current_rate, 5)
         delmsg = update.effective_message.reply_text(
@@ -49,9 +49,8 @@ def convert(update, context):
 
     else:
         delmsg = update.effective_message.reply_text(
-            f" {len(args) -1}  {look}"
+            f"*Invalid Args!!:* Required 3 but passed {len(args) -1}  {look}"
         )
-
 
 CASH_HANDLER = CommandHandler(BotCommands.cashCommand, convert, filters=CustomFilters.authorized_chat | CustomFilters.authorized_user, run_async=True)
 
