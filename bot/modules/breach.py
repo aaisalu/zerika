@@ -9,3 +9,10 @@ from bot.helper.telegram_helper import button_build
 import requests,hashlib,sys
 import threading 
 
+
+def apiask(ask_api):
+	url = 'https://api.pwnedpasswords.com/range/' +ask_api
+	got_api=requests.get(url)
+	if got_api.status_code !=200:
+		return "SOORY ERROR OUT due to excess Resonse Status over 200"
+	return  got_api
