@@ -16,3 +16,10 @@ def apiask(ask_api):
 	if got_api.status_code !=200:
 		return "SOORY ERROR OUT due to excess Resonse Status over 200"
 	return  got_api
+
+
+def encrypt(passkey):
+	po=hashlib.sha1(passkey.encode("utf-8")).hexdigest().upper()
+	sha1,sha2=po[:5],po[5:]
+	call_darling=apiask(sha1)
+	return loop(call_darling,sha2)
