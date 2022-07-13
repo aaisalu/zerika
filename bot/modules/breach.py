@@ -17,9 +17,15 @@ def apiask(ask_api):
 		return "SOORY ERROR OUT due to excess Resonse Status over 200"
 	return  got_api
 
-
 def encrypt(passkey):
 	po=hashlib.sha1(passkey.encode("utf-8")).hexdigest().upper()
 	sha1,sha2=po[:5],po[5:]
 	call_darling=apiask(sha1)
 	return loop(call_darling,sha2)
+
+def loop(first,last):
+	split1=(k.split(":") for k in first.text.splitlines())
+	for frst,lst in split1:
+		if frst==last:
+			return lst
+	return 0
