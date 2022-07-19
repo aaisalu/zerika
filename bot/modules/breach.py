@@ -29,3 +29,29 @@ def loop(first,last):
 		if frst==last:
 			return lst
 	return 0
+
+
+def say(update, context):
+	message = update.effective_message
+	say_pass = message.text[len("/key ") :]
+	if say_pass:
+		call_me=encrypt(say_pass)
+		if call_me:
+			# msg=f"Your Password is <b><tg-spoiler> {say_pass}</tg-spoiler></b> found in Server for <b>{call_me}</b> times.You should Probably change your password. "
+			sendMessage(f"Your Password is <b><tg-spoiler> {say_pass}</tg-spoiler></b> found in Server for <b>{call_me}</b> times.You should Probably change your password. ", context.bot, update)
+		else:
+			# msg=f"Your Password is <b><tg-spoiler> {say_pass}</tg-spoiler></b> Not found in Server. Nice Password darling."
+			sendMessage(f"Your Password is <b><tg-spoiler> {say_pass}</tg-spoiler></b> Not found in Server. Nice Password darling.", context.bot, update)
+	else:
+		msg ="Please type your key.Eg: /key your_password"
+		sendMessage(f"{msg}", context.bot, update) 
+	
+
+PASSWORD_HANDLER = CommandHandler(BotCommands.keyCommand, say, filters=CustomFilters.authorized_chat | CustomFilters.authorized_user, run_async=True)
+dispatcher.add_handler(PASSWORD_HANDLER)
+
+
+
+
+
+
