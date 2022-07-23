@@ -152,7 +152,7 @@ except KeyError as e:
     LOGGER.error("One or more env variables missing! Exiting now")
     exit(1)
 
-LOGGER.info("Generating BOT_STRING_SESSION")
+LOGGER.info("Generating Junkiri_STRING_SESSION")
 app = Client('pyrogram', api_id=int(TELEGRAM_API), api_hash=TELEGRAM_HASH, bot_token=BOT_TOKEN, no_updates=True)
 
 try:
@@ -169,7 +169,7 @@ else:
 
 def aria2c_init():
     try:
-        logging.info("Initializing Aria2c")
+        logging.info("Initializing Junkiri")
         link = "https://releases.ubuntu.com/21.10/ubuntu-21.10-desktop-amd64.iso.torrent"
         dire = DOWNLOAD_DIR.rstrip("/")
         aria2.add_uris([link], {'dir': dire})
@@ -179,7 +179,7 @@ def aria2c_init():
         for download in downloads:
             aria2.remove([download], force=True, files=True)
     except Exception as e:
-        logging.error(f"Aria2c initializing error: {e}")
+        logging.error(f"Junkiri initializing error: {e}")
         pass
 
 if not ospath.isfile(".restartmsg"):
@@ -225,6 +225,17 @@ except KeyError:
     logging.warning('MEGA Credentials not provided!')
     MEGA_EMAIL_ID = None
     MEGA_PASSWORD = None
+
+try:
+    WEATHER_API = getConfig('WEATHER_API')
+    CASH_API_KEY = getConfig('CASH_API_KEY')
+    if len(WEATHER_API) == 0 or len(CASH_API_KEY) == 0:
+        raise KeyError
+except KeyError:
+    logging.warning('WEATHER_API are CASH_API_KEY not provided!')
+    WEATHER_API = None
+    CASH_API_KEY = None
+
 try:
     UPTOBOX_TOKEN = getConfig('UPTOBOX_TOKEN')
     if len(UPTOBOX_TOKEN) == 0:
